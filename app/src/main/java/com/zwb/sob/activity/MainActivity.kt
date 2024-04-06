@@ -40,6 +40,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private var mLastFragment: Fragment? = null
 
     override fun ActivityMainBinding.initView() {
+        //默认切到Home
         switchFragment(HOME)
         initBottomNavigation()
 }

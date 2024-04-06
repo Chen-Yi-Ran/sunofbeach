@@ -53,8 +53,10 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
         ARouter.getInstance().inject(this)
 
         // 注册EventBus
-        if (javaClass.isAnnotationPresent(EventBusRegister::class.java)) EventBusUtils.register(this)
-
+        //判断是否有辅助注册EventBus注解
+        if (javaClass.isAnnotationPresent(EventBusRegister::class.java)) {
+            EventBusUtils.register(this)
+        }
         mLoadingDialog = LoadingDialog(this, false)
         mViewModel.loadState.observe(this, observer)
 
@@ -109,10 +111,11 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
      */
     fun isLoginIntercept(toLogin: Boolean): Boolean{
         val sobToken = SpUtils.getString(RetrofitFactory.SOB_TOKEN,"")
-        // 已经登录
+        // 已经登录,token不为空
         if(!TextUtils.isEmpty(sobToken)){
             return true
         }
+        //跳转LoginActivity
         if(toLogin){
             ARouter.getInstance()
                 .build("/login/LoginActivity")

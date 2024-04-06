@@ -11,6 +11,7 @@ android {
         targetSdkVersion BuildConfig.targetSdkVersion
         versionCode BuildConfig.versionCode
         versionName BuildConfig.versionName
+        ndkVersion "22.1.7171670"//设置为本地对应的ndk不然编译会报错
         testInstrumentationRunner AndroidX.AndroidJUnitRunner
     }
     buildTypes {
@@ -47,6 +48,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
+    //组件化判断模式
     if (BuildConfig.isAppMode) {
         implementation project(path: ':lib_common')
     } else {
