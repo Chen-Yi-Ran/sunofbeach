@@ -23,15 +23,20 @@ class LoginViewModel : BaseViewModel() {
             if(res.success){
                 val token = repository.checkToken(key)
                 token?.let {
+                    //登录成功后保存用户信息
                     SpUtils.putString(SpKey.USER_ID, token.id)
                     SpUtils.putString(SpKey.USER_AVATAR, if(TextUtils.isEmpty(token.avatar))"" else token.avatar!! )
                     SpUtils.putString(SpKey.USER_NICKNAME, if(TextUtils.isEmpty(token.nickname))"" else token.nickname!! )
                 }
             }
+            //将返回监听结果
             response.value = res
         }, loadState, key)
         return response
     }
+
+
+
 
     fun registerSms(query: SendSmsBean, key: String): MutableLiveData<BaseResponse<String?>> {
         val response: MutableLiveData<BaseResponse<String?>> = MutableLiveData()

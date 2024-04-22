@@ -30,8 +30,8 @@
             android:id="@+id/iv_more"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:padding="@dimen/dp_12"
             android:src="@mipmap/ic_more" />
 

@@ -12,6 +12,7 @@ import com.pgyer.pgyersdk.callback.CheckoutCallBack
 import com.pgyer.pgyersdk.model.CheckSoftModel
 import com.zwb.lib_base.mvvm.v.BaseActivity
 import com.zwb.lib_base.utils.EventBusRegister
+import com.zwb.lib_base.utils.LogUtils
 import com.zwb.lib_base.utils.SpUtils
 import com.zwb.lib_base.utils.StatusBarUtil
 import com.zwb.lib_common.constant.Constants
@@ -173,7 +174,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initRequestData() {
-        // 刷新token
+        // 刷新token(可能过期需要重新登录)
         mViewModel.checkToken()
     }
 
@@ -189,5 +190,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 startActivity(intent)
             }
     }
+
 
 }

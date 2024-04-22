@@ -88,6 +88,11 @@ class RetrofitFactory private constructor() {
         }
     }
 
+    /**
+     * 获取到图片的时候，在response的header里有l_c_i字段，这个字段内容是图灵码的key，需要在提交的时候，在request的header中携带。
+     * 登录成功以后，token会在response的header中返回，字段是sob_token，请求数据时，携带在request的header中，每次response都判断一下header中是否有sob_token，
+     * 如果有，就说明原来的过期了，替换更新原来的。
+     */
     private fun initCommonInterceptor(): Interceptor {
         return Interceptor { chain ->
             val builder = chain.request()

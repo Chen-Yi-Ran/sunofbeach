@@ -10,6 +10,7 @@ import com.zwb.sob_login.LoginApi
 import com.zwb.sob_login.LoginViewModel
 import com.zwb.sob_login.activity.LoginActivity
 import com.zwb.sob_login.bean.LoginInBean
+import com.zwb.sob_login.bean.LoginInBean2
 import com.zwb.sob_login.databinding.LoginFragmentBinding
 
 
@@ -58,6 +59,8 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
         }
         showLoading()
         val loginInBean = LoginInBean(mBinding.editPhone.getValue(), Md5Utils.getMD5(mBinding.editPassword.getValue()))
+        val loginInBean2=LoginInBean2(mBinding.editPhone.getValue(),mBinding.editPassword.getValue())
+
         mViewModel.login(mBinding.editTuringCode.getValue(), loginInBean, LoginApi.LOGIN_URL)
             .observe(viewLifecycleOwner, {
                 mBinding.editTuringCode.initTuringCode()

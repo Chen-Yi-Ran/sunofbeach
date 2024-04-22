@@ -146,6 +146,7 @@ class LoginActivity : BaseActivity<LoginActivityBinding, LoginViewModel>() {
         when (i) {
             PageType.SWITCH_REGISTER.ordinal -> {
                 val str = resources.getString(R.string.login_register_agreement)
+                //修改字体颜色到哪
                 mBinding.tvAgreement.text = UIUtils.setTextViewContentStyle(
                     str,
                     AbsoluteSizeSpan(UIUtils.dp2px(14f)),
@@ -175,6 +176,7 @@ class LoginActivity : BaseActivity<LoginActivityBinding, LoginViewModel>() {
     private fun onLoginSuccess(){
         if (!TextUtils.isEmpty(path)) {
             when(path){
+                //EventBus发送到MainActivity到
                 RoutePath.Ucenter.FRAGMENT_UCENTER -> EventBusUtils.postEvent(StringEvent(StringEvent.Event.SWITCH_UCENTER))
                 else -> ARouter.getInstance().build(path)
                     .with(intent.extras)
@@ -192,4 +194,5 @@ class LoginActivity : BaseActivity<LoginActivityBinding, LoginViewModel>() {
     enum class PageType(v: Int) {
         SWITCH_LOGIN(0), SWITCH_REGISTER(1), SWITCH_FORGET(2), LOGIN_SUCCESS(3)
     }
+
 }

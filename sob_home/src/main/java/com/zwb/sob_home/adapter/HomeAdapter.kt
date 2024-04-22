@@ -24,6 +24,7 @@ class HomeAdapter(data: MutableList<MultiItemEntity>?) :
     BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder>(data) {
 
     init {
+        //两种不同布局的返回item
         addItemType(1, R.layout.home_adapter)
         addItemType(2, R.layout.home_multi_adapter)
     }

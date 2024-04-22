@@ -18,10 +18,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.zwb.lib_base.ktx.gone
 import com.zwb.lib_base.ktx.visible
 import com.zwb.lib_base.utils.UIUtils
+import com.zwb.sob_login.GlideApp
 import com.zwb.sob_login.R
 import com.zwb.sob_login.databinding.LoginCodeLayoutBinding
 
-
+//自定义验证码的ViewGroup
 class CodeEditView : LinearLayout, View.OnFocusChangeListener {
 
     private var codeUrl = "https://api.sunofbeaches.com/uc/ut/captcha?code="
@@ -56,8 +57,9 @@ class CodeEditView : LinearLayout, View.OnFocusChangeListener {
         hint = attr.getString(R.styleable.CodeEditView_codeHint)
         isPhoneCode = attr.getBoolean(R.styleable.CodeEditView_isPhoneCode, false)
         attr.recycle()
+        //将LoginCodeLayoutBinding绑定到CodeEditView
         binding = LoginCodeLayoutBinding.inflate(LayoutInflater.from(context), this, true)
-
+        //通过isPhoneCode判断 一种是倒计时验证码，一种是图灵验证码
         if (isPhoneCode) {
             binding.btnMsgCode.visible()
             binding.ivTuring.gone()
@@ -122,8 +124,9 @@ class CodeEditView : LinearLayout, View.OnFocusChangeListener {
     }
 
     fun initTuringCode() {
+        //磁盘缓存,缓存转换过后的图片
         val options = RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-        Glide.with(context).load(codeUrl + (0..100).random()).apply(options).into(binding.ivTuring)
+        GlideApp.with(context).load(codeUrl + (0..100).random()).apply(options).into(binding.ivTuring)
     }
 
     fun timerCancel() {
@@ -136,6 +139,7 @@ class CodeEditView : LinearLayout, View.OnFocusChangeListener {
     }
 
     private fun initListener() {
+        //设置焦点监听,如果当前焦点在editInput和离开就会调用一次
         binding.editInput.onFocusChangeListener = this
         binding.btnMsgCode.setOnClickListener {
             phoneCodeListener?.let {
@@ -144,6 +148,7 @@ class CodeEditView : LinearLayout, View.OnFocusChangeListener {
                 }
             }
         }
+        //点击图灵码切换
         binding.ivTuring.setOnClickListener {
             initTuringCode()
         }

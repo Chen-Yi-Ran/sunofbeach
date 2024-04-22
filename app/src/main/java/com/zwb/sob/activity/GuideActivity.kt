@@ -24,7 +24,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, MainViewModel>() {
         vp2Guide.offscreenPageLimit = 3
         vp2Guide.adapter = adapter
         guideIndicator.setViewPager2(vp2Guide, 3)
-        //点击进入
+        //点击按钮进入
         adapter.setOnItemChildClickListener { _, view, _ ->
             when (view.id) {
                 R.id.tv_hello -> {

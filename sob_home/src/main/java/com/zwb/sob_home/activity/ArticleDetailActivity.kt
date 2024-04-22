@@ -23,6 +23,7 @@ import com.zwb.lib_base.ktx.gone
 import com.zwb.lib_base.ktx.visible
 import com.zwb.lib_base.mvvm.v.BaseActivity
 import com.zwb.lib_base.utils.DateUtils
+import com.zwb.lib_base.utils.LogUtils
 import com.zwb.lib_base.utils.StatusBarUtil
 import com.zwb.lib_base.utils.UIUtils
 import com.zwb.lib_common.CommonApi
@@ -80,13 +81,17 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
         mBinding.tvReplyNum.gone()
         mBinding.tvStarNum.gone()
         setDefaultLoad(this.refreshLayout, HomeApi.ARTICLE_DETAIL_URL)
+        //头布局
         contentBinding = HomeDetailContentLayoutBinding.inflate(layoutInflater)
         initWebView()
 
+
         mAdapter = HomeDetailAdapter(this@ArticleDetailActivity, mutableListOf())
         this.rvContent.setHasFixedSize(true)
+        //当前页面recyclerView的适配器
         this.rvContent.adapter = mAdapter
         this.rvContent.layoutManager = LinearLayoutManager(this@ArticleDetailActivity)
+        //适配器添加头布局WebView
         mAdapter.addHeaderView(contentBinding.root)
 
         bottomSheetDialog = FixedHeightBottomSheetDialog(
@@ -106,18 +111,23 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
         }
 
         mBinding.tvHeaderFollow.setOnClickListener {
+            //如果已经登录并且article对象不为空，去关注
             if (isLoginIntercept(true) && article != null) {
                 follow()
             }
         }
 
+        //点击回复
         mBinding.tvReply.setOnClickListener {
             showReplyDialog()
         }
+
+        //点击展示文章目录
         mBinding.ivList.setOnClickListener {
             showContentList()
         }
 
+        //滚动位置
         mBinding.ivSwitch.setOnClickListener {
             if (mBinding.ivSwitch.tag == 1) {
                 mBinding.ivSwitch.setImageResource(R.mipmap.ic_detail_reply)
@@ -132,6 +142,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
             }
         }
 
+        //点赞
         mBinding.ivStar.setOnClickListener {
             if (mBinding.tvStarNum.tag == true) {
                 return@setOnClickListener
@@ -139,6 +150,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
             thumbUp()
         }
 
+        //收藏
         mBinding.ivCollection.setOnClickListener {
             if (TextUtils.isEmpty(articleId) || TextUtils.isEmpty(articleTitle)) {
                 return@setOnClickListener
@@ -150,14 +162,17 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
             getCollectFolder()
         }
 
+        //打赏
         mBinding.tvReward.setOnClickListener {
             showPriseDialog()
         }
 
+        //跳转打赏列表
         contentBinding.tvPriseList.setOnClickListener {
             PriseListActivity.launch(this, articleId)
         }
 
+        //recyclerView滚动监听
         mBinding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -166,6 +181,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
                 if (scrollY >= contentBinding.layoutHeader.height) {
                     mBinding.layoutHeaderAvatar.visible()
                     mBinding.includeBar.tvTitle.gone()
+                    //设置偏移效果
                     mBinding.layoutHeaderAvatar.alpha =
                         1f * (scrollY - contentBinding.layoutHeader.height) / contentBinding.layoutHeader.height
                 } else {
@@ -197,16 +213,20 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
             }
         })
 
+        //重写setOnItemClickListener
         mAdapter.setOnItemChildClickListener { adapter, view, position ->
             when (view.id) {
+                //点击adapter添加webView后面的昵称，头像
                 R.id.tv_related_nickname, R.id.iv_related_avatar -> {
                     val recommend = adapter.getItem(position) as ArticleRecommendBean
                     UcenterServiceWrap.instance.launchDetail(recommend.userId)
                 }
+                //点击adapter添加webView后面评论的昵称，头像
                 R.id.tv_comment_nickname, R.id.iv_comment_avatar -> {
                     val comment = adapter.getItem(position) as CommentBean
                     UcenterServiceWrap.instance.launchDetail(comment.userId)
                 }
+                //点击回复到回复弹窗
                 R.id.iv_comment_reply -> {
                     val comment = adapter.getItem(position) as CommentBean
                     showReplyDialog(comment)
@@ -215,6 +235,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
         }
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
+            //如果点击的是推荐内容才跳转，比如评论的不是ArticleRecommendBean类型就不跳转
             if (adapter.getItem(position) is ArticleRecommendBean) {
                 val item = adapter.getItem(position) as ArticleRecommendBean
                 HomeServiceWrap.instance.launchDetail(item.id, item.title)
@@ -253,6 +274,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
         CommonViewUtils.showBigImage(this, contentBinding.codeView.getImageList(), index)
     }
 
+    //页面创建去请求数据
     override fun initRequestData() {
         // 文章详情
         mViewModel.getArticleDetail(articleId, HomeApi.ARTICLE_DETAIL_URL).observe(this, {
@@ -309,6 +331,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
                 commentList.add(comment)
                 commentList.addAll(comment.subComments)
             }
+            //添加到首个位置
             mAdapter.addData(0,commentList)
 
             if(isRefresh && mAdapter.data.size > commentList.size){
@@ -481,12 +504,13 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
      */
     @SuppressLint("SetTextI18n")
     private fun setContentData(article: ArticleDetailBean) {
+        LogUtils.d("cyr","打印一下进行setContentData")
         articleTitle = article.title
         mBinding.includeBar.tvTitle.text = articleTitle
-
+        //article.content返回网页的内容
         //这里的CODE 为需要显示的代码，类型为String，使用的时候自己替换下。
         contentBinding.codeView.showCode(article.content)
-
+        //加载头像
         contentBinding.ivAvatar.loadAvatar(article.isVip == 1, article.avatar)
 
         contentBinding.tvNickname.text = article.nickname
@@ -508,6 +532,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
         mBinding.tvHeaderNickname.text = article.nickname
         mBinding.ivHeaderAvatar.loadAvatar(article.isVip == 1, article.avatar)
         if (article.thumbUp > 0) {
+            //点赞数
             mBinding.tvStarNum.visible()
             mBinding.tvStarNum.text = article.thumbUp.toString()
         }
@@ -579,6 +604,7 @@ class ArticleDetailActivity : BaseActivity<HomeActivityArticleDetailBinding, Hom
                     val tvTitle = helper.getView<TextView>(R.id.tv_title)
                     tvTitle.text = item.title
                     when (it.level) {
+                        //根据优先级显示具体目录文字的大小
                         2 -> tvTitle.setPadding(UIUtils.dp2px(8f), 0, 0, 0)
                         3 -> {
                             tvTitle.setPadding(UIUtils.dp2px(28f), 0, 0, 0)

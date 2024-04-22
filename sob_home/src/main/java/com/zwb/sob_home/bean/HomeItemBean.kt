@@ -17,6 +17,7 @@ data class HomeItemBean(
 ) : MultiItemEntity {
 
     override fun getItemType(): Int {
+
         return if (this.covers.size > 1) 2 else 1
     }
 }

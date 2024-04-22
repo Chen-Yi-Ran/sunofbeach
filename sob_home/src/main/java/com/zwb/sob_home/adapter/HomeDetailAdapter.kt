@@ -25,7 +25,7 @@ import com.zwb.lib_common.service.ucenter.wrap.UcenterServiceWrap
 import com.zwb.lib_common.view.AvatarDecorView
 import com.zwb.sob_home.R
 
-
+//也就是WebView后面的布局
 class HomeDetailAdapter(context: Activity, data: MutableList<MultiItemEntity>?) :
     BaseMultiItemQuickAdapter<MultiItemEntity, BaseViewHolder>(data) {
 

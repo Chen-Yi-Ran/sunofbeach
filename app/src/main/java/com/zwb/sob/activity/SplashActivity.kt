@@ -20,8 +20,7 @@ class SplashActivity:BaseActivity<ActivitySplashBinding, MainViewModel>() {
         if(SpUtils.getBoolean(SpKey.IS_FIRST_LAUNCHER, true) == null
             || SpUtils.getBoolean(SpKey.IS_FIRST_LAUNCHER,true)!! ){
             runnable = Runnable {
-                GuideActivity.launch(this@SplashActivity)
-                finish()
+                toGuide()
             }
             h.postDelayed(runnable, 500)
         }else{
@@ -36,6 +35,14 @@ class SplashActivity:BaseActivity<ActivitySplashBinding, MainViewModel>() {
         if(!this.isDestroyed && !this.isFinishing){
             h.removeCallbacks(runnable)
             MainActivity.launch(this)
+            finish()
+        }
+    }
+
+    private fun toGuide(){
+        if(!this.isDestroyed && !this.isFinishing){
+            h.removeCallbacks(runnable)
+            GuideActivity.launch(this)
             finish()
         }
     }

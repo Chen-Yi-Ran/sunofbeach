@@ -168,6 +168,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment(),
         loadMap.remove(key)?.showCallback(ErrorCallback::class.java)
     }
 
+    //监听State
     private val observer by lazy {
         Observer<State> {
             it?.let {
