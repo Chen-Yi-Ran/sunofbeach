@@ -4,6 +4,7 @@ import androidx.fragment.app.viewModels
 import com.tencent.smtt.utils.Md5Utils
 import com.zwb.lib_base.mvvm.v.BaseFragment
 import com.zwb.lib_base.utils.EventBusUtils
+import com.zwb.lib_base.utils.LogUtils
 import com.zwb.lib_base.utils.SpUtils
 import com.zwb.lib_common.constant.SpKey
 import com.zwb.sob_login.LoginApi
@@ -28,6 +29,12 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
         this.tvForget.setOnClickListener {
             EventBusUtils.postEvent(LoginActivity.PageType.SWITCH_FORGET)
         }
+        mViewModel.getUserInfo()
+            .observe(viewLifecycleOwner,{
+                if(it.success){
+                    LogUtils.d("cyr","成功获取到用户信息---${it.message}----${it.data}")
+                }
+            })
     }
 
     override fun initObserve() {
@@ -45,10 +52,10 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
     }
 
     private fun login() {
-        if(mBinding.editPhone.getValue().length!=11){
-            toast("请输入正确的手机号")
-            return
-        }
+//        if(mBinding.editPhone.getValue().length!=11){
+//            toast("请输入正确的手机号")
+//            return
+//        }
         if(mBinding.editPassword.getValue().isEmpty()){
             toast("请输入密码")
             return
@@ -61,11 +68,12 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
         val loginInBean = LoginInBean(mBinding.editPhone.getValue(), Md5Utils.getMD5(mBinding.editPassword.getValue()))
         val loginInBean2=LoginInBean2(mBinding.editPhone.getValue(),mBinding.editPassword.getValue())
 
-        mViewModel.login(mBinding.editTuringCode.getValue(), loginInBean, LoginApi.LOGIN_URL)
-            .observe(viewLifecycleOwner, {
+        mViewModel.newLogin(mBinding.editTuringCode.getValue(),loginInBean2,LoginApi.NEW_LOGIN_URL)
+            .observe(viewLifecycleOwner,{
                 mBinding.editTuringCode.initTuringCode()
                 dismissLoading()
                 if(it.success){
+
                     SpUtils.putBoolean(SpKey.IS_LOGIN, true)
                     EventBusUtils.postEvent(LoginActivity.PageType.LOGIN_SUCCESS)
                 }else{
@@ -73,6 +81,18 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
                     toast(it.message)
                 }
             })
+//        mViewModel.login(mBinding.editTuringCode.getValue(), loginInBean, LoginApi.LOGIN_URL)
+//            .observe(viewLifecycleOwner, {
+//                mBinding.editTuringCode.initTuringCode()
+//                dismissLoading()
+//                if(it.success){
+//                    SpUtils.putBoolean(SpKey.IS_LOGIN, true)
+//                    EventBusUtils.postEvent(LoginActivity.PageType.LOGIN_SUCCESS)
+//                }else{
+//                    SpUtils.putBoolean(SpKey.IS_LOGIN, false)
+//                    toast(it.message)
+//                }
+//            })
     }
 
 

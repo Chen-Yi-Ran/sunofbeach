@@ -3,10 +3,7 @@ package com.zwb.sob_login
 import com.zwb.lib_base.net.BaseResponse
 import com.zwb.lib_common.bean.TokenBean
 import com.zwb.lib_common.constant.Constants
-import com.zwb.sob_login.bean.LoginInBean
-import com.zwb.sob_login.bean.ModifyPwdBean
-import com.zwb.sob_login.bean.RegisterBean
-import com.zwb.sob_login.bean.SendSmsBean
+import com.zwb.sob_login.bean.*
 import retrofit2.http.*
 
 interface LoginApi {
@@ -16,6 +13,17 @@ interface LoginApi {
         @Path("captcha") captcha: String,
         @Body query: LoginInBean
     ): BaseResponse<String?>
+
+
+    @POST("${NEW_LOGIN_URL}/{captcha}/{glide_key}")
+    suspend fun newLogin(
+        @Path("captcha") captcha: String,
+        @Path("glide_key") glide_key:String,
+        @Body query: LoginInBean2
+    ):BaseResponse<String?>
+
+    @GET("http://192.168.1.200:2020/user/user_info/1230644350879268864")
+    suspend fun getUserInfo():BaseResponse<UserInfoBean?>
 
     @GET(Constants.URL.CHECK_TOKEN_URL)
     suspend fun checkToken(): BaseResponse<TokenBean?>
@@ -32,6 +40,8 @@ interface LoginApi {
         @Path("phoneNumber") phoneNumber: String,
         @Path("smsCode") smsCode: String
     ): BaseResponse<String?>
+
+
 
     @POST("${REGISTER_URL}/{smsCode}")
     suspend fun register(
@@ -53,9 +63,11 @@ interface LoginApi {
 
     companion object {
         const val BASE_URL = "https://api.sunofbeaches.com/"
+        const val NEW_BASE_URL="http://192.168.1.200:2020"
 
         // 登录
         const val LOGIN_URL = "${BASE_URL}uc/user/login"
+        const val NEW_LOGIN_URL="${NEW_BASE_URL}/user/login"
 
         // 获取注册的手机验证码（注册）
         const val REGISTER_SMS_URL = "${BASE_URL}uc/ut/join/send-sms"

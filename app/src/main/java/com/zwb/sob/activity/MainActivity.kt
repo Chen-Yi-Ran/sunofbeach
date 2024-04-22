@@ -44,7 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         //默认切到Home
         switchFragment(HOME)
         initBottomNavigation()
-}
+    }
     private fun initBottomNavigation() {
         mBinding.navView.setOnNavigationItemSelectedListener { menuItem: MenuItem ->
             when (menuItem.itemId) {

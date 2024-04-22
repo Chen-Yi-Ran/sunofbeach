@@ -22,7 +22,7 @@ import java.net.URLDecoder
 class RetrofitFactory private constructor() {
 
     companion object {
-        const val SOB_TOKEN = "sob_token"
+        const val SOB_TOKEN = "sob_blog_token"
         const val L_C_I = "l_c_i"
 
         val instance by lazy {
@@ -106,7 +106,7 @@ class RetrofitFactory private constructor() {
             }
             val sobToken = SpUtils.getString(SOB_TOKEN,"")
             if(!TextUtils.isEmpty(sobToken)){
-                builder.addHeader(SOB_TOKEN, sobToken!!)
+                builder.addHeader("Cookie", sobToken!!)
             }
             val response = chain.proceed(builder.build())
 
@@ -115,7 +115,9 @@ class RetrofitFactory private constructor() {
             for (i in 0 until responseHeadersLength) {
                 val headerName = responseHeaders.name(i)
                 val headerValue = responseHeaders[headerName]
-                if(headerName == SOB_TOKEN && !TextUtils.isEmpty(headerValue)){
+                LogUtils.d("cyr","headName----${headerName}")
+                LogUtils.d("cyr","headerValue----${headerValue}")
+                if(headerName == "Set-Cookie" && !TextUtils.isEmpty(headerValue)){
                     SpUtils.putString(SOB_TOKEN, headerValue!!)
                     break
                 }

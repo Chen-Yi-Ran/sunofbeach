@@ -7,10 +7,7 @@ import com.zwb.lib_base.net.BaseResponse
 import com.zwb.lib_base.net.RetrofitFactory
 import com.zwb.lib_base.net.State
 import com.zwb.lib_common.bean.TokenBean
-import com.zwb.sob_login.bean.LoginInBean
-import com.zwb.sob_login.bean.ModifyPwdBean
-import com.zwb.sob_login.bean.RegisterBean
-import com.zwb.sob_login.bean.SendSmsBean
+import com.zwb.sob_login.bean.*
 
 class LoginRepo(private val loadState: MutableLiveData<State>) : BaseRepository() {
     private val apiService by lazy {
@@ -19,6 +16,14 @@ class LoginRepo(private val loadState: MutableLiveData<State>) : BaseRepository(
 
     suspend fun login(captcha: String, query: LoginInBean): BaseResponse<String?> {
         return apiService.login(captcha, query)
+    }
+
+    suspend fun newLogin(captcha: String,query:LoginInBean2,key:String):BaseResponse<String?>{
+        return apiService.newLogin(captcha,key,query)
+    }
+
+    suspend fun getUserInfo():BaseResponse<UserInfoBean?>{
+        return apiService.getUserInfo()
     }
 
     suspend fun checkToken(key: String): TokenBean? {

@@ -17,15 +17,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.zwb.lib_base.ktx.gone
 import com.zwb.lib_base.ktx.visible
+import com.zwb.lib_base.utils.LogUtils
 import com.zwb.lib_base.utils.UIUtils
 import com.zwb.sob_login.GlideApp
 import com.zwb.sob_login.R
 import com.zwb.sob_login.databinding.LoginCodeLayoutBinding
+import com.zwb.sob_login.glideKey
 
 //自定义验证码的ViewGroup
 class CodeEditView : LinearLayout, View.OnFocusChangeListener {
 
-    private var codeUrl = "https://api.sunofbeaches.com/uc/ut/captcha?code="
+    private var codeUrl = "http://192.168.1.200:2020/user/captcha?captcha_key="
 
     private lateinit var binding: LoginCodeLayoutBinding
 
@@ -126,7 +128,12 @@ class CodeEditView : LinearLayout, View.OnFocusChangeListener {
     fun initTuringCode() {
         //磁盘缓存,缓存转换过后的图片
         val options = RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-        GlideApp.with(context).load(codeUrl + (0..100).random()).apply(options).into(binding.ivTuring)
+        //GlideApp.with(context).load(codeUrl + (0..100).random()).apply(options).into(binding.ivTuring)
+        glideKey=codeUrl +"${(3815825449258+(0..100).random())} "
+        var data:Long=3815825449258+(0..100).random()
+        glideKey=data.toString()
+        LogUtils.d("cyr","---->glideKey--${codeUrl+ glideKey}")
+        GlideApp.with(context).load(codeUrl+ glideKey).apply(options).into(binding.ivTuring)
     }
 
     fun timerCancel() {
